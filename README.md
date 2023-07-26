@@ -1,213 +1,127 @@
-# Unit 5 - Financial Planning
+To run this code one needs the following imports:
+* Pandas
+* HVPlot
+* Geoviews
+* Cartopy
+* Pyproj
+As well as to run the code from a base/dev environment
 
-![Financial Planner](Images/financial-planner.png)
 
-## Background
+# Housing Rental Analysis for San Francisco
 
-You decided to start a FinTech consultancy firm, and you want to make a difference by working on projects with high social impact in local communities. You just won your first contract to help one of the biggest credit unions in your area. They want to create a tool that helps their members enhance their financial health. The Chief Technology Officer (CTO) of the credit union asked you to develop a prototype application to demo in the next credit union assembly.
-
-The credit union board wants to allow the union's members to assess their monthly personal finances, and also be able to forecast a reasonably good retirement plan based on cryptocurrencies, stocks, and bonds.
-
-In this homework activity, you will use all the skills you have learned until now - focusing on using APIs as part of the technical solution - to create two financial analysis tools.
-
-The first will be a personal finance planner that will allow users to visualize their savings composed by investments in shares and cryptocurrencies to assess if they have enough money as an emergency fund.
-
-The second tool will be a retirement planning tool that will use the Alpaca API to fetch historical closing prices for a retirement portfolio composed of stocks and bonds, then run Monte Carlo simulations to project the portfolio performance at 30 years. You will then use the Monte Carlo data to calculate the expected portfolio returns given a specific initial investment amount.
-
----
-
-### Files
-
-* [Personal Finance Planner starter code](Starter_Code/financial-planner.ipynb)
-
-* [MCForecastTools toolkit](Starter_Code/MCForecastTools.py)
-
----
-
-### Resources
-
-This homework will utilize two APIs:
-
-* The **Alpaca Markets API** will be used to pull historical stocks and bonds information.
-
-* The **Alternative Free Crypto API** will be used to retrieve Bitcoin and Ethereum prices.
-
-The documentation for these APIs can be found via the following links:
-
-* [Free Crypto API Documentation](https://alternative.me/crypto/api/)
-
-* [AlpacaDOCS](https://alpaca.markets/docs/)
----
+In this challenge, your job is to use your data visualization skills, including aggregation, interactive visualizations, and geospatial analysis, to find properties in the San Francisco market that are viable investment opportunities.
 
 ## Instructions
 
-### Part 1 - Personal Finance Planner
+Use the `san_francisco_housing.ipynb` notebook to visualize and analyze the real-estate data.
 
-In this section of the challenge, you will create a personal finance planner application. To develop the personal finance planner prototype, you should take into account the following assumptions:
+Note that this assignment requires you to create a visualization by using hvPlot and GeoViews. Additionally, you need to read the `sfo_neighborhoods_census_data.csv` file from the `Resources` folder into the notebook and create the DataFrame that you’ll use in the analysis.
 
-* The average household income for each member of the credit union is $12,000.
+The main task in this Challenge is to visualize and analyze the real-estate data in your Jupyter notebook. Use the `san_francisco_housing.ipynb` notebook to complete the following tasks:
 
-* Every union member has a savings portfolio composed of cryptocurrencies, stocks and bonds:
+* Calculate and plot the housing units per year.
 
-    * Assume the following amount of crypto assets: `1.2` BTC and `5.3` ETH.
+* Calculate and plot the average prices per square foot.
 
-    * Assume the following amount of shares in stocks and bonds: `50` SPY (stocks) and `200` AGG (bonds).
+* Compare the average prices by neighborhood.
 
-Use the starter Jupyter notebook to complete the following steps.
+* Build an interactive neighborhood map.
 
-#### Collect Crypto Prices Using the `requests` Library
+* Compose your data story.
 
-1. Create two variables called `my_btc` and `my_eth`. Set them equal to `1.2` and `5.3`, respectively.
+### Calculate and Plot the Housing Units per Year
 
-2. Use the `requests` library to fetch the current price in US dollars (`USD`) of bitcoin (`BTC`) and ethereum (`ETH`) using the **Alternative Free Crypto API** endpoints provided in the starter notebook.
+For this part of the assignment, use numerical and visual aggregation to calculate the number of housing units per year, and then visualize the results as a bar chart. To do so, complete the following steps:
 
-3. Parse the API JSON response to select only the crypto prices and store each price in a variable.
+1. Use the `groupby` function to group the data by year. Aggregate the results by the `mean` of the groups.
 
-    **Hint:** Be aware of the particular identifier for each cryptocurrency in the API JSON response - the bitcoin identifier is `1` whereas ethereum is `1027`.
+2. Use the `hvplot` function to plot the `housing_units_by_year` DataFrame as a bar chart. Make the x-axis represent the `year` and the y-axis represent the `housing_units`.
 
-4. Compute the portfolio value of cryptocurrencies and print the results.
+3. Style and format the line plot to ensure a professionally styled visualization.
 
-#### Collect Investments Data Using Alpaca: `SPY` (stocks) and `AGG` (bonds)
+4. Note that your resulting plot should appear similar to the following image:
 
-**Important:** Remember to create a `.env` file in your working directory to store the values of your Alpaca API key and Alpaca secret key.
+![A screenshot depicts an example of the resulting bar chart.](Images/zoomed-housing-units-by-year.png)
 
-1. Create two variables named `my_agg` and `my_spy` and set them equal to `200` and `50`, respectively.
+5. Answer the following question:
 
-2. Set the Alpaca API key and secret key variables, then create the Alpaca API object using the `tradeapi.REST` function from the Alpaca SDK.
+    * What’s the overall trend in housing units over the period that you’re analyzing?
 
-3. Format the current date as ISO format. You may change the date set in the starter code to the current date.
+### Calculate and Plot the Average Sale Prices per Square Foot
 
-4. Get the current closing prices for `SPY` and `AGG` using Alpaca's `get_bars()` function. Transform the function's response to a Pandas DataFrame and preview the data.
+For this part of the assignment, use numerical and visual aggregation to calculate the average prices per square foot, and then visualize the results as a bar chart. To do so, complete the following steps:
 
-5. Pick the `SPY` and `AGG` close prices from the Alpaca's `get_bars()` DataFrame response and store them as Python variables. Print the closing values for validation.
+1. Group the data by year, and then average the results. What’s the lowest gross rent that’s reported for the years that the DataFrame includes?
 
-6. Compute the value in dollars of the current amount of shares and print the results.
+2. Create a new DataFrame named `prices_square_foot_by_year` by filtering out the “housing_units” column. The new DataFrame should include the averages per year for only the sale price per square foot and the gross rent.
 
-#### Savings Health Analysis
+3. Use hvPlot to plot the `prices_square_foot_by_year` DataFrame as a line plot.
 
-In this section, you will assess the financial health of the credit union's members.
+    > **Hint** This single plot will include lines for both `sale_price_sqr_foot` and `gross_rent`.
 
-1. Create a variable called `monthly_income` and set its value to `12000`.
+4. Style and format the line plot to ensure a professionally styled visualization.
 
-2. To analyze savings health, create a DataFrame called `df_savings` with two rows. Store the total value in dollars of the crypto assets in the first row and the total value of the shares in the second row.
+5. Note that your resulting plot should appear similar to the following image:
 
-    **Hint:** The `df_savings` DataFrame should have one column named `amount` and two rows where `crypto` and `shares` are the index values:
+![A screenshot depicts an example of the resulting plot.](Images/avg-sale-px-sq-foot-gross-rent.png)
 
-    ![df_savings](Images/df_savings.png)
+6. Use both the `prices_square_foot_by_year` DataFrame and interactive plots to answer the following questions:
 
-3. Use the `df_savings` DataFrame to plot a pie chart to visualize the composition of personal savings.
+    * Did any year experience a drop in the average sale price per square foot compared to the previous year?
 
-4. Use `if` conditional statements to validate if the current savings are enough for an emergency fund. An ideal emergency fund should be equal to three times your monthly income.
+    * If so, did the gross rent increase or decrease during that year?
 
-    * If total savings are greater than the emergency fund, display a message congratulating the person for having enough money in this fund.
+### Compare the Average Sale Prices by Neighborhood
 
-    * If total savings are equal to the emergency fund, display a message congratulating the person on reaching this financial goal.
+For this part of the assignment, use interactive visualizations and widgets to explore the average sale price per square foot by neighborhood. To do so, complete the following steps:
 
-    * If total savings are less than the emergency fund, display a message showing how many dollars away the person is from reaching the goal.
+1. Create a new DataFrame that groups the original DataFrame by year and neighborhood. Aggregate the results by the `mean` of the groups.
 
-### Part 2 - Retirement Planning
+2. Filter out the “housing_units” column to create a DataFrame that includes only the `sale_price_sqr_foot` and `gross_rent` averages per year.
 
-In this section, you will use the Alpaca API to fetch historical closing prices for a retirement portfolio and then Use the MCForecastTools toolkit to create Monte Carlo simulations to project the portfolio performance at `30` years. You will then use the Monte Carlo data to answer questions about the portfolio.
+3. Create an interactive line plot with hvPlot that visualizes both `sale_price_sqr_foot` and `gross_rent`. Set the x-axis parameter to the year (`x="year"`). Use the `groupby` parameter to create an interactive widget for `neighborhood`.
 
-Follow the steps outlined in the starter notebook to complete the following:
+4. Style and format the line plot to ensure a professionally styled visualization.
 
-#### Monte Carlo Simulation
+5. Note that your resulting plot should appear similar to the following image:
 
-1. Use the Alpaca API to fetch five years historical closing prices for a traditional `40/60` portfolio using the `SPY` and `AGG` tickers to represent the `60%` stocks (`SPY`) and `40%` bonds (`AGG`) composition of the portfolio. Make sure to convert the API output to a DataFrame and preview the output.
+![A screenshot depicts an example of the resulting plot.](Images/pricing-info-by-neighborhood.png)
 
-    > *Note*: In Monte-Carlo Simulation, getting data as far back as possible matters, because if we simulate using only small amounts of data during a recent time when markets are booming, or instead falling precipitously, a Monte-Carlo Analysis will inadvertently extrapolate this temporary market movement too far into the future. Getting data over a longer time period mitigates this effect.
+6. Use the interactive visualization to answer the following question:
 
-2. Configure and execute a Monte Carlo Simulation of `500` runs and `30` years for the `40/60` portfolio.
+    * For the Anza Vista neighborhood, is the average sale price per square foot for 2016 more or less than the price that’s listed for 2012? 
 
-3. Plot the simulation results and the probability distribution/confidence intervals.
+### Build an Interactive Neighborhood Map
 
-    ![monte carlo](Images/monte-carlo.png)
+For this part of the assignment, explore the geospatial relationships in the data by using interactive visualizations with hvPlot and GeoViews. To build your map, use the `sfo_data_df` DataFrame (created during the initial import), which includes the neighborhood location data with the average prices. To do all this, complete the following steps:
 
-    ![histogram](Images/histogram.png)
+1. Read the `neighborhood_coordinates.csv` file from the `Resources` folder into the notebook, and create a DataFrame named `neighborhood_locations_df`. Be sure to set the `index_col` of the DataFrame as “Neighborhood”.
 
-#### Retirement Analysis
+2. Using the original `sfo_data_df` Dataframe, create a DataFrame named `all_neighborhood_info_df` that groups the data by neighborhood. Aggregate the results by the `mean` of the group.
 
-1. Fetch the summary statistics from the Monte Carlo simulation results.
+3. Review the two code cells that concatenate the `neighborhood_locations_df` DataFrame with the `all_neighborhood_info_df` DataFrame. Note that the first cell uses the [Pandas concat function](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html) to create a DataFrame named `all_neighborhoods_df`. The second cell cleans the data and sets the “Neighborhood” column. Be sure to run these cells to create the `all_neighborhoods_df` DataFrame, which you’ll need to create the geospatial visualization.
 
-1. Given an initial investment of `$20,000`, calculate the expected portfolio return in dollars at the `95%` lower and upper confidence intervals.
+4. Using hvPlot with GeoViews enabled, create a `points` plot for the `all_neighborhoods_df` DataFrame. Be sure to do the following:
 
-2. Calculate the expected portfolio return at the `95%` lower and upper confidence intervals based on a `50%` increase in the initial investment.
+    * Set the `geo` parameter to True.
+    * Set the `size` parameter to “sale_price_sqr_foot”.
+    * Set the `color` parameter to “gross_rent”.
+    * Set the `frame_width` parameter to 700.
+    * Set the `frame_height` parameter to 500.
+    * Include a descriptive title.
 
-### Optional Challenge - Early Retirement
+Note that your resulting plot should appear similar to the following image:
 
-The CTO of the Credit Union was really impressed with your work on this planner, but commented that `30` years seems like such a long time to wait to retire! The CTO starts wondering if the retirement plan could be adjusted to account for an earlier than normal retirement.
+![A screenshot depicts an example of a scatter plot created with hvPlot and GeoViews.](Images/6-4-geoviews-plot.png)
 
-Try adjusting the portfolio to either include more risk (a higher stock than bond ratio) or to have a larger initial investment and rerun the retirement analysis to see what it would take to retire in `5` or `10` years instead of `30`!
+5. Use the interactive map to answer the following question:
 
----
+    * Which neighborhood has the highest gross rent, and which has the highest sale price per square foot?
 
-### Hints and Considerations
+### Compose Your Data Story
 
-* To allow for quicker work during the Monte Carlo simulation, start out by running `100` simulations for one year of returns, and when you have the code worked out, run the full `500` simulations for `30` years.
+Based on the visualizations that you created, answer the following questions:
 
-* Remember to add the `.env` files to the `.gitignore` configuration to avoid exposing your API keys in your GitHub repository.
+* How does the trend in rental income growth compare to the trend in sales prices? Does this same trend hold true for all the neighborhoods across San Francisco?
 
-* A `.gitignore` file contains file names and extensions of files that you don't want pushed to your repository. For more information on how a `gitignore` works, you can read the documentation [here](https://docs.github.com/en/github/using-git/ignoring-files).
-
-### Submission
-
-1. Use the starter Jupyter Notebook for your Personal Finance Planner.
-
-2. Submit your notebook to a new GitHub repository and create a `README.md` file.
-
-3. Submit the link to your GitHub project to Bootcampspot for grading.
-
----
-
-### Requirements
-
-#### Personal Finance Planner  (35 points)
-
-##### To receive all points, your code must:
-
-* Collect crypto prices using the requests Library. (10 points)
-* Collect investments data using Alpaca: SPY (stocks) and AGG (bonds). (10 points)
-* Perform a savings health analysis. (15 points)
-
-
-#### Retirement Planning (35 points)
-
-##### To receive all points, your code must:
-
-* Complete a Monte Carlo Simulation with 500 runs. (15 points)
-* Plot the Monte Carlo simulation results. (5 points)
-* Plot the probability distribution and confidence intervals. (5 points)
-* Complete the retirement analysis. (10 points)
-
-#### Optional Bonus (10 points)
-
-##### To receive all bonus points, your code must:
-
-* Optional: Adjust the portfolio to reflect an early retirement and rerun the analysis to show either a higher stock than bond ratio, or to have a higher initial investment. (10 points)
-
-#### Coding Conventions and Formatting (10 points)
-
-##### To receive all points, your code must:
-
-* Place imports at the beginning of the file, just after any module comments and docstrings and before module globals and constants. (3 points)
-* Name functions and variables with lowercase characters and with words separated by underscores. (2 points)
-* Follow Don't Repeat Yourself (DRY) principles by creating maintainable and reusable code. (3 points)
-* Use concise logic and creative engineering where possible. (2 points)
-
-#### Deployment and Submission (10 points)
-
-##### To receive all points, you must:
-
-* Submit a link to a GitHub repository that’s cloned to your local machine and contains your files. (5 points)
-* Include appropriate commit messages in your files. (5 points)
-
-#### Code Comments (10 points)
-
-##### To receive all points, your code must:
-
-* Be well commented with concise, relevant notes that other developers can understand. (10 points)
-
-
----
-
-© 2022 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
+* What insights can you share with your company about the potential one-click, buy-and-rent strategy that they're pursuing? Do neighborhoods exist that you would suggest for investment, and why?
